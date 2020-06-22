@@ -311,7 +311,13 @@ namespace CudaSolver
                         }
                         Comms.SetEvent();
                     }
-
+                    uint[] count;
+                    do{
+                    if (!TEST && ((currentJob.pre_pow != Comms.nextJob.pre_pow) || (currentJob.origin != Comms.nextJob.origin)))
+                    {
+                        currentJob = Comms.nextJob;
+                        currentJob.timestamp = DateTime.Now;
+                    }
                     currentJob = currentJob.Next();
 
                     Logger.Log(LogLevel.Debug, string.Format("GPU NV{4}:Trimming #{4}: {0} {1} {2} {3}", currentJob.k0, currentJob.k1, currentJob.k2, currentJob.k3, currentJob.jobID, deviceID));
@@ -356,7 +362,7 @@ namespace CudaSolver
                     ctx.Synchronize();
                     streamPrimary.Synchronize();
 
-                    uint[] count = new uint[2];
+                    count = new uint[2];
                     d_indexesA.CopyToHost(count, 0, 0, 8);
 
                     if (count[0] > 4194304)
@@ -375,7 +381,9 @@ namespace CudaSolver
                     currentJob.trimTime = timer.ElapsedMilliseconds;
 
                     //Console.WriteLine("Trimmed in {0}ms to {1} edges", timer.ElapsedMilliseconds, count[0]);
-                    Logger.Log(LogLevel.Info, string.Format("GPU NV{2}:     Trimmed in {0}ms to {1} edges", timer.ElapsedMilliseconds, count[0], deviceID));
+                    Logger.Log(LogLevel.Info, string.Format("GPU NV{2}:     Trimmed in {0}ms to {1} edges, h {3}", timer.ElapsedMilliseconds, count[0], deviceID,currentJob.height));
+                    
+                    }while((currentJob.height != Comms.nextJob.height)&&(!Comms.IsTerminated)&&(!TEST));
 
                     if (TEST)
                     {

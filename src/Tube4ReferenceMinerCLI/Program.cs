@@ -312,7 +312,7 @@ namespace Mozkomor.GrinGoldMinerCLI
                             string who = ConnectionManager.IsInFee() ? "FEE" : (conn?.login ?? "USER");
                             who = who.Length > 10 ? who.Substring(0, 10)+".." : who;
 
-                            Console.WriteLine("Bittube 4 Reference Miner 1.0.0");
+                            Console.WriteLine("Bittube 4 Reference Miner 1.0.1");
                             Console.WriteLine("------------------------------------------------------------------------------------------");
                             WipeLine();
                             Console.Write("Mining for: ");

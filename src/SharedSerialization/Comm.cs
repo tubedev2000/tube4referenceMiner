@@ -181,7 +181,7 @@ namespace SharedSerialization
     {
         public string login;
         public string pass;
-        public string agent = "Tube4RefMiner/1.0.0";
+        public string agent = "Tube4RefMiner/1.0.1";
     }
 
     //stratum
